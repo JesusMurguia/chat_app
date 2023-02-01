@@ -1,9 +1,7 @@
 package com.jesusmurguia.chat_app.business;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -29,7 +27,6 @@ public class User {
     private String role;
 
     @NotBlank
-    @Size(min = 4, max = 45)
     private String password;
 
     @NotBlank

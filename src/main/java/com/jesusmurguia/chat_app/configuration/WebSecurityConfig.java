@@ -31,8 +31,8 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests()
-                .requestMatchers("/api/register").anonymous()
-                .requestMatchers("/api/**").hasRole("USER")
+                .requestMatchers("/api/chat/**").hasRole("USER")
+                .anyRequest().permitAll()
                 .and()
                 .csrf().disable()
                 .httpBasic(withDefaults());
