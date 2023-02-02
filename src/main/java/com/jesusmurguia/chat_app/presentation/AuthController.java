@@ -3,27 +3,44 @@ package com.jesusmurguia.chat_app.presentation;
 import com.jesusmurguia.chat_app.business.LoginForm;
 import com.jesusmurguia.chat_app.business.User;
 import com.jesusmurguia.chat_app.persistence.UserRepository;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Size;
+import com.jesusmurguia.chat_app.service.TokenService;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.UUID;
+import org.slf4j.Logger;
 
 @RestController
-public class RegistrationController {
+public class AuthController {
+    private static final Logger LOG = LoggerFactory.getLogger(AuthController.class);
+    private final TokenService tokenService;
+
+    public AuthController(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
+
     @Autowired
     UserRepository userRepo;
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @PostMapping("/api/token")
+    public ResponseEntity<?> getToken(Authentication authentication) {
+        LOG.debug("Token requested for user: '{}'", authentication.getName());
+        String token  = tokenService.generateToken(authentication);
+        LOG.debug("Token granted {}", token);
+        return new ResponseEntity<>(token,HttpStatus.OK);
+    }
 
     @PostMapping("/api/register")
     public ResponseEntity<?> register(@RequestBody LoginForm loginForm) {
