@@ -18,7 +18,7 @@ public class TokenService {
         this.encoder = encoder;
     }
 
-    public String generateToken(Authentication authentication){
+    public String generateToken(Authentication authentication, String room){
         Instant now = Instant.now();
         String scope = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -29,6 +29,7 @@ public class TokenService {
                 .expiresAt(now.plus(1,ChronoUnit.DAYS))
                 .subject(authentication.getName())
                 .claim("scope", scope)
+                .claim("room", room)
                 .build();
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
