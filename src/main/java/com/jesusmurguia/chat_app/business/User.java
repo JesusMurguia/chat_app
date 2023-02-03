@@ -1,6 +1,5 @@
 package com.jesusmurguia.chat_app.business;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -8,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -31,4 +32,14 @@ public class User {
 
     @NotBlank
     private String status;
+
+    @ManyToMany(mappedBy = "users")
+    List<Room> rooms;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_has_conversation",
+            joinColumns = @JoinColumn(name = "idconversation"),
+            inverseJoinColumns = @JoinColumn(name = "iduser"))
+    List<Conversation> conversations;
 }

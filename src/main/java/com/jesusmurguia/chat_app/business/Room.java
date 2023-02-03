@@ -23,4 +23,11 @@ public class Room {
     @OneToMany
     @JoinColumn(name = "idroom")
     private List<Conversation> conversations;
+
+    @ManyToMany
+    @JoinTable(
+            name = "room_has_user",
+            joinColumns = @JoinColumn(name = "iduser"),
+            inverseJoinColumns = @JoinColumn(name = "idroom"))
+    List<User> users;
 }

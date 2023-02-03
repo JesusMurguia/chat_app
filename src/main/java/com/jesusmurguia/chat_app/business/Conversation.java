@@ -22,4 +22,7 @@ public class Conversation {
     @OneToMany
     @JoinColumn(name = "idconversation")
     private List<Message> messages;
+
+    @ManyToMany(mappedBy = "conversations")
+    List<User> users;
 }
