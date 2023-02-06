@@ -47,13 +47,12 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/chat/**").authenticated()
-                        .requestMatchers("/api/register","/api/token").permitAll()
+                        .requestMatchers("/**").permitAll()
                     )
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf().disable()
                 .httpBasic(withDefaults())
                 .build();
     }

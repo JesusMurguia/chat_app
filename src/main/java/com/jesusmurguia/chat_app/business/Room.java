@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Table(name = "room")
-@ToString
 public class Room {
     @Id
     @Column(name = "idroom")
@@ -24,7 +23,7 @@ public class Room {
     @JoinColumn(name = "idroom")
     private List<Conversation> conversations;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "room_has_user",
             joinColumns = @JoinColumn(name = "iduser"),

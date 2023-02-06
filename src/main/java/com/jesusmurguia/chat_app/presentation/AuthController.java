@@ -1,17 +1,28 @@
 package com.jesusmurguia.chat_app.presentation;
 
 import com.jesusmurguia.chat_app.business.LoginForm;
+import com.jesusmurguia.chat_app.business.Room;
 import com.jesusmurguia.chat_app.business.User;
+import com.jesusmurguia.chat_app.persistence.RoomRepository;
 import com.jesusmurguia.chat_app.persistence.UserRepository;
 import com.jesusmurguia.chat_app.service.TokenService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import jdk.swing.interop.SwingInterOpUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.slf4j.Logger;
 
@@ -28,14 +39,24 @@ public class AuthController {
     UserRepository userRepo;
 
     @Autowired
+    RoomRepository roomRepository;
+
+    @Autowired
     PasswordEncoder passwordEncoder;
 
-    @PostMapping("/api/token")
-    public ResponseEntity<?> getToken(Authentication authentication,@RequestParam(required = true) String room) {
+    @PostMapping("/api/login")
+    public ResponseEntity<?> getToken(Authentication authentication,@RequestBody(required = true) String room, HttpServletResponse response) {
         LOG.debug("Token requested for user: '{}'", authentication.getName());
+        room = handleRoom(room, userRepo.findByUsername(authentication.getName()));
         String token  = tokenService.generateToken(authentication, room);
         LOG.debug("Token granted {}", token);
-        return new ResponseEntity<>(token,HttpStatus.OK);
+        Cookie cookie = new Cookie("jwt", token);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(24 * 60 * 60);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        return new ResponseEntity<>(Map.of("accessToken", token, "room", room),HttpStatus.OK);
     }
 
     @PostMapping("/api/register")
@@ -51,5 +72,23 @@ public class AuthController {
         user.setStatus("OFFLINE");
         userRepo.save(user);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private String handleRoom(String idroom, User user){
+        if(roomRepository.existsById(idroom)){
+            Room room = roomRepository.findById(idroom);
+            if(!room.getUsers().contains(user)){
+                room.getUsers().add(user);
+                roomRepository.save(room);
+            }
+        }else{
+            Room newRoom = new Room();
+            idroom = UUID.randomUUID().toString();
+            newRoom.setId(idroom);
+            newRoom.setUsers(new ArrayList<>());
+            newRoom.getUsers().add(user);
+            roomRepository.save(newRoom);
+        }
+        return idroom;
     }
 }
