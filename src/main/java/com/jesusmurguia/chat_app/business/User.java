@@ -35,6 +35,11 @@ public class User {
     @NotBlank
     private String status;
 
+    @JsonIgnore
+    private String sessionId;
+    @JsonIgnore
+    private String room;
+
     @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
     @JsonIgnore
     List<Room> rooms;

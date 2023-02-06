@@ -56,7 +56,7 @@ public class AuthController {
         cookie.setSecure(true);
         cookie.setPath("/");
         response.addCookie(cookie);
-        return new ResponseEntity<>(Map.of("accessToken", token, "room", room),HttpStatus.OK);
+        return new ResponseEntity<>(Map.of("accessToken", token, "room", room, "user", userRepo.findByUsername(authentication.getName())),HttpStatus.OK);
     }
 
     @PostMapping("/api/register")
@@ -75,6 +75,7 @@ public class AuthController {
     }
 
     private String handleRoom(String idroom, User user){
+        user.setStatus("ONLINE");
         if(roomRepository.existsById(idroom)){
             Room room = roomRepository.findById(idroom);
             if(!room.getUsers().contains(user)){
