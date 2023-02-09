@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -44,13 +45,9 @@ public class User {
     @JsonIgnore
     List<Room> rooms;
 
-    @ManyToMany
-    @JsonIgnore
-    @JoinTable(
-            name = "user_has_conversation",
-            joinColumns = @JoinColumn(name = "idconversation"),
-            inverseJoinColumns = @JoinColumn(name = "iduser"))
-    List<Conversation> conversations;
+//    @OneToMany
+//    @JoinColumn(name = "senderId")
+//    private List<Conversation> conversations;
 
     public boolean equals(Object user){
         if(user instanceof User){

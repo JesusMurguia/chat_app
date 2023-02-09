@@ -1,43 +1,40 @@
 package com.jesusmurguia.chat_app.business;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Table(name = "message")
-@ToString
+@Builder
 public class Message {
     @Id
     @Column(name = "idmessage")
+    @GeneratedValue( strategy = GenerationType.UUID)
     private String id;
 
-    @Size(max = 280)
-    @NotBlank
+    private String sender;
+
+    private String receiver;
+
     private String content;
 
-    @OneToOne
-    @JoinColumn(name = "sender", referencedColumnName = "iduser")
-    private User sender;
-
-    @OneToOne
-    @JoinColumn(name = "receiver", referencedColumnName = "iduser")
-    private User receiver;
-
-    @NotBlank
     private String status;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    @UpdateTimestamp
-    private LocalDateTime date;
+    private String room;
+
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date date;
 }

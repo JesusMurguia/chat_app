@@ -19,10 +19,6 @@ public class Room {
     @Column(name = "idroom")
     private String id;
 
-    @OneToMany
-    @JoinColumn(name = "idroom")
-    private List<Conversation> conversations;
-
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "room_has_user",
