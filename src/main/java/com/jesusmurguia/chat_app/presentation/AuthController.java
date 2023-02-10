@@ -44,8 +44,7 @@ public class AuthController {
         room = handleRoom(room, userRepo.findByUsername(authentication.getName()));
         String token  = tokenService.generateToken(authentication, room);
         LOG.debug("Token granted {}", token);
-        Cookie cookie = new Cookie("jwt", token);
-        cookie.setHttpOnly(true);
+        Cookie cookie = new Cookie("idroom", room);
         cookie.setMaxAge(24 * 60 * 60);
         cookie.setSecure(true);
         cookie.setPath("/");
