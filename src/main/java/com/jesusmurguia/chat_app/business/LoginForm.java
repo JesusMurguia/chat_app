@@ -14,6 +14,4 @@ public class LoginForm {
     @NotBlank
     @Size(min = 4, max = 45)
     private String password;
-
-    private String room;
 }

@@ -45,10 +45,6 @@ public class User {
     @JsonIgnore
     List<Room> rooms;
 
-//    @OneToMany
-//    @JoinColumn(name = "senderId")
-//    private List<Conversation> conversations;
-
     public boolean equals(Object user){
         if(user instanceof User){
             User toCompare = (User) user;
