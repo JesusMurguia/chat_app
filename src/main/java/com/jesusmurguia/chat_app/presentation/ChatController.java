@@ -75,6 +75,7 @@ public class ChatController {
         if(receiver.equals(chatMessage.getReceiver())){
             senderConv.incrementUnreadMessages();
         }
+        senderConv.setLastMessage(chatMessage.getContent());
         convoRepo.save(senderConv);
         messagingTemplate.convertAndSendToUser(receiver,"/messages/"+chatMessage.getRoom(),chatMessage);
     }

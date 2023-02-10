@@ -28,6 +28,8 @@ public class Conversation {
 
     private int unreadMessages = 0;
 
+    private String lastMessage;
+
     public void incrementUnreadMessages(){
         unreadMessages++;
     }
