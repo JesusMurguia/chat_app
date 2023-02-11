@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  mySQL:
+    image: mysql:latest
+    restart: always
+    container_name: jesusmurguia_chat_app_db
+    environment:
+      - MYSQL_DATABASE=chat_app
+      - MYSQL_ROOT_PASSWORD=12341234
+    ports:
+      - "3305:3306"
+    volumes:
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
