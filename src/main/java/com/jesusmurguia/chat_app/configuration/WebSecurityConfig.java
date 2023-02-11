@@ -50,10 +50,12 @@ public class WebSecurityConfig {
         return http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/**").permitAll()
+                        .requestMatchers("/api/chat/user/**","/api/chat/room/**").authenticated()
                     )
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf().disable()
+                .formLogin().disable()
                 .httpBasic(withDefaults())
                 .build();
     }

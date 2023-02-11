@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +31,7 @@ public class MessageController {
 
     @Autowired
     MessageRepository messageRepository;
-    @GetMapping("/api/chat/conversation/messages/{room}")
+    @GetMapping("/api/chat/messages/{room}")
     public ResponseEntity<?> getConversations(Authentication authentication, @PathVariable(required = true) String room, @RequestParam String receiver) {
         LOG.error(room);
         LOG.error(receiver);
